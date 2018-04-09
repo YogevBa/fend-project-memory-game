@@ -1,6 +1,41 @@
 /*
  * Create a list that holds all of your cards
  */
+ const cards = document.querySelectorAll('.card');
+ const restart = document.querySelector('.restart');
+ let openCards = [];
+
+
+ function addListeners(){
+   for (let i = 0; i<cards.length; i++){
+    cards[i].addEventListener('click' , function(){
+      showCard(this)
+      addToOpenCards(this);
+      equality(this);
+    });
+  };
+};
+
+addListeners();
+
+function showCard (card){
+  card.classList.add('show');
+  card.classList.add('open');
+}
+
+function addToOpenCards (card) {
+  openCards.push(card);
+}
+
+function equality(card) {
+  let symbol = card.querySelector('i').classList[1];
+  if ()
+}
+
+
+
+
+
 
 
 /*
