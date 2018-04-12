@@ -1,41 +1,55 @@
-/*
- * Create a list that holds all of your cards
- */
  const cards = document.querySelectorAll('.card');
  const restart = document.querySelector('.restart');
  let openCards = [];
+ let firstCard;
 
 
- function addListeners(){
+ function cardListener(){
    for (let i = 0; i<cards.length; i++){
     cards[i].addEventListener('click' , function(){
       showCard(this)
       addToOpenCards(this);
-      equality(this);
+      //equality(this);
     });
   };
 };
 
-addListeners();
+cardListener();
 
 function showCard (card){
-  card.classList.add('show');
   card.classList.add('open');
+  card.classList.add('show');
 }
 
-function addToOpenCards (card) {
+function addToOpenCards (card){
+  if (!firstCard){
+    firstCard = card;
+  }
+  else {
+    equality(card);
+  }
   openCards.push(card);
 }
 
-function equality(card) {
-  let symbol = card.querySelector('i').classList[1];
-  if ()
-}
-
-
-
-
-
+function equality (secondCard) {
+  let card2 = secondCard.querySelector('i').classList[1];
+  openCards.forEach(function(elem){
+    let playedCard = elem.querySelector('i').classList[1];
+    if (playedCard === card2){
+      //match
+      secondCard.classList.add('match');
+      elem.classList.add('match');
+    }
+    else{
+      //return to pool -> remove from array
+        openCards.pop(card2);
+        openCards.pop(playedCard);
+        secondCard.classList.remove('open,show');
+        elem.classList.remove('open');
+        elem.classList.remove('show');
+    }
+  });
+};
 
 
 /*
