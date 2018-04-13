@@ -1,24 +1,40 @@
  const cards = document.querySelectorAll('.card');
+ let cardsArray = Array.prototype.slice.call(cards);
  const restart = document.querySelector('.restart');
  let openCards = [];
  let firstCard;
+ let pairs = 0;
 
+
+
+function init() {
+  cardListener();
+}
 
  function cardListener(){
    for (let i = 0; i<cards.length; i++){
     cards[i].addEventListener('click' , function(){
-      showCard(this)
-      addToOpenCards(this);
-      //equality(this);
+      if (this.classList.contains('open') && this.classList.contains('show')) {
+        return;
+      }
+      else {
+        showCard(this)
+        addToOpenCards(this);
+      }
+
+
     });
   };
 };
 
-cardListener();
-
 function showCard (card){
   card.classList.add('open');
   card.classList.add('show');
+}
+
+function removeCard (card){
+  card.classList.remove('open');
+  card.classList.remove('show');
 }
 
 function addToOpenCards (card){
@@ -30,28 +46,42 @@ function addToOpenCards (card){
   }
   openCards.push(card);
 }
-
 function equality (secondCard) {
-  let card2 = secondCard.querySelector('i').classList[1];
+  let playedCard = secondCard.querySelector('i').classList[1];
   openCards.forEach(function(elem){
-    let playedCard = elem.querySelector('i').classList[1];
-    if (playedCard === card2){
+    let cardInArray = elem.querySelector('i').classList[1];
+    if (cardInArray === playedCard){
       //match
       secondCard.classList.add('match');
       elem.classList.add('match');
+      pairs += 1;
+      winCondition();
     }
     else{
       //return to pool -> remove from array
-        openCards.pop(card2);
         openCards.pop(playedCard);
-        secondCard.classList.remove('open,show');
-        elem.classList.remove('open');
-        elem.classList.remove('show');
+        openCards.pop(cardInArray);
+        removeCard(elem);
     }
   });
 };
 
+function winCondition(){
+  if(pairs === 8){
+    setTimeout(function(){
+      alert('Well Done');
+    },100)
+  }
 
+}
+init();
+
+
+
+// if (cardsArray.indexOf(firstCard) !== cardsArray.indexOf(card)) {
+//   openCards.push(card);
+//
+// }
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
