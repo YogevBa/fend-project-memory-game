@@ -1,32 +1,30 @@
  const cards = document.querySelectorAll('.card');
- let cardsArray = Array.prototype.slice.call(cards);
  const restart = document.querySelector('.restart');
  let openCards = [];
  let firstCard;
  let pairs = 0;
-
-
+ let cardsCounter = 0;
 
 function init() {
   cardListener();
 }
-
+// Sets the card's click event and basic functionality of flipping cards.
  function cardListener(){
    for (let i = 0; i<cards.length; i++){
     cards[i].addEventListener('click' , function(){
+      cardsCounter += 1;
       if (this.classList.contains('open') && this.classList.contains('show')) {
+        cardsCounter -= 1;
         return;
       }
-      else {
-        showCard(this)
+      else if (cardsCounter <=2){
+        showCard(this);
         addToOpenCards(this);
       }
-
-
     });
   };
 };
-
+// Functions that triggers the CSS classes on the selected div.
 function showCard (card){
   card.classList.add('open');
   card.classList.add('show');
@@ -36,16 +34,18 @@ function removeCard (card){
   card.classList.remove('open');
   card.classList.remove('show');
 }
-
+// Adding cards to the openCards or generating card data if its the first card.
 function addToOpenCards (card){
   if (!firstCard){
     firstCard = card;
   }
   else {
+// If the second card clicked, move to equality for match validation.
     equality(card);
   }
   openCards.push(card);
 }
+// Match validation function
 function equality (secondCard) {
   let playedCard = secondCard.querySelector('i').classList[1];
   openCards.forEach(function(elem){
@@ -55,33 +55,34 @@ function equality (secondCard) {
       secondCard.classList.add('match');
       elem.classList.add('match');
       pairs += 1;
+      cardsCounter = 0;
       winCondition();
     }
     else{
-      //return to pool -> remove from array
-        openCards.pop(playedCard);
-        openCards.pop(cardInArray);
-        removeCard(elem);
+      //Return to pool -> remove from array ->Flip cards to starting position.
+      setTimeout(function(){
+        if(!elem.classList.contains('match') && !secondCard.classList.contains('match')){
+          removeCard(elem)
+          removeCard(secondCard)
+          openCards.pop(cardInArray);
+          openCards.pop(playedCard);
+          cardsCounter = 0;
+        }
+      },1000)
     }
   });
 };
-
+// Win Condition.
 function winCondition(){
   if(pairs === 8){
     setTimeout(function(){
       alert('Well Done');
     },100)
   }
-
 }
+
 init();
 
-
-
-// if (cardsArray.indexOf(firstCard) !== cardsArray.indexOf(card)) {
-//   openCards.push(card);
-//
-// }
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
@@ -90,6 +91,7 @@ init();
  */
 
 // Shuffle function from http://stackoverflow.com/a/2450976
+
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -103,6 +105,14 @@ function shuffle(array) {
 
     return array;
 }
+
+
+
+
+
+
+
+
 
 
 /*
