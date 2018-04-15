@@ -1,12 +1,19 @@
- const cards = document.querySelectorAll('.card');
+ let cards = document.querySelectorAll('.card');
  const restart = document.querySelector('.restart');
  let openCards = [];
+ let cardsArray = [];
  let firstCard;
  let pairs = 0;
  let cardsCounter = 0;
+ let minutesLabel = document.getElementById("minutes");
+ let secondsLabel = document.getElementById("seconds");
+ let totalSeconds = 0;
+ let timeCounter = setInterval(startTimer, 1000);
 
 function init() {
+  cardsBuilder();
   cardListener();
+  restartGame();
 }
 // Sets the card's click event and basic functionality of flipping cards.
  function cardListener(){
@@ -45,6 +52,15 @@ function addToOpenCards (card){
   }
   openCards.push(card);
 }
+// Reset game and shuffle cards.
+function restartGame(){
+  restart.addEventListener('click' , function(){
+    resetTimer();
+    cardsBuilder();
+    startTimer();
+  });
+
+}
 // Match validation function
 function equality (secondCard) {
   let playedCard = secondCard.querySelector('i').classList[1];
@@ -75,23 +91,13 @@ function equality (secondCard) {
 // Win Condition.
 function winCondition(){
   if(pairs === 8){
+    clearInterval(timeCounter)
     setTimeout(function(){
       alert('Well Done');
     },100)
   }
 }
-
-init();
-
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
-
-// Shuffle function from http://stackoverflow.com/a/2450976
-
+// Shuffle function.
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -105,6 +111,56 @@ function shuffle(array) {
 
     return array;
 }
+// Starts the count up timer.
+function startTimer() {
+  ++totalSeconds;
+  secondsLabel.innerHTML = pad(totalSeconds % 60);
+  minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60));
+}
+// Resets the timer.
+function resetTimer() {
+  totalSeconds;
+  secondsLabel.innerHTML = pad(totalSeconds = 0);
+  minutesLabel.innerHTML = pad(parseInt(totalSeconds = 0));
+}
+
+// Sets the logic of number of string values for the timer.
+function pad(val) {
+  var valString = val + "";
+  if (valString.length < 2) {
+    return "0" + valString;
+  } else {
+    return valString;
+  }
+}
+// Builds and reform the game cards on the document.
+function cardsBuilder(){
+  cardsArray = Array.prototype.slice.call(cards); //transform NodeList to array.
+  cardsArray = shuffle(cardsArray);
+  document.querySelector('.deck').innerHTML = ''; //clears the innerHTML elements of "deck".
+  cardsArray.forEach(function(elem){
+    if (elem.classList.contains('match')){
+      elem.classList.remove('open');
+      elem.classList.remove('show');
+      elem.classList.remove('match');
+    }
+    document.querySelector('.deck').appendChild(elem);
+  });
+}
+
+
+init();
+
+/*
+ * Display the cards on the page
+ *   - shuffle the list of cards using the provided "shuffle" method below
+ *   - loop through each card and create its HTML
+ *   - add each card's HTML to the page
+ */
+
+// Shuffle function from http://stackoverflow.com/a/2450976
+
+
 
 
 
