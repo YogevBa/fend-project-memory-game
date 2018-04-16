@@ -4,11 +4,14 @@
  let cardsArray = [];
  let firstCard;
  let pairs = 0;
+ let moves = 0;
  let cardsCounter = 0;
  let minutesLabel = document.getElementById("minutes");
  let secondsLabel = document.getElementById("seconds");
  let totalSeconds = 0;
  let timeCounter = setInterval(startTimer, 1000);
+ let movesDisplay = document.querySelector('.moves');
+
 
 function init() {
   cardsBuilder();
@@ -20,13 +23,17 @@ function init() {
    for (let i = 0; i<cards.length; i++){
     cards[i].addEventListener('click' , function(){
       cardsCounter += 1;
-      if (this.classList.contains('open') && this.classList.contains('show')) {
+      if (this.classList.contains('open')) {
         cardsCounter -= 1;
         return;
       }
-      else if (cardsCounter <=2){
+      else if (cardsCounter <= 2){
         showCard(this);
         addToOpenCards(this);
+      }
+      if (cardsCounter === 2){
+        moves += 1;
+        movesDisplay.textContent = moves;
       }
     });
   };
@@ -55,9 +62,9 @@ function addToOpenCards (card){
 // Reset game and shuffle cards.
 function restartGame(){
   restart.addEventListener('click' , function(){
-    resetTimer();
     cardsBuilder();
-    startTimer();
+    cardListener();
+    resetTimer();
   });
 
 }
@@ -137,28 +144,27 @@ function pad(val) {
 function cardsBuilder(){
   cardsArray = Array.prototype.slice.call(cards); //transform NodeList to array.
   cardsArray = shuffle(cardsArray);
+  openCards = [];
+  pairs = 0;
+  cardsCounter = 0;
+  moves = 0;
+  movesDisplay.textContent = 0;
   document.querySelector('.deck').innerHTML = ''; //clears the innerHTML elements of "deck".
   cardsArray.forEach(function(elem){
-    if (elem.classList.contains('match')){
+    if (elem.classList.contains('match') || elem.classList.contains('open') || elem.classList.contains('show')){
       elem.classList.remove('open');
       elem.classList.remove('show');
       elem.classList.remove('match');
     }
     document.querySelector('.deck').appendChild(elem);
   });
+  cardListener();
 }
 
 
 init();
 
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
 
-// Shuffle function from http://stackoverflow.com/a/2450976
 
 
 
