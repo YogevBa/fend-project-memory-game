@@ -1,5 +1,6 @@
  let cards = document.querySelectorAll('.card');
  const restart = document.querySelector('.restart');
+ const playAgain = document.querySelector('#playAgain');
  let openCards = [];
  let cardsArray = [];
  let firstCard;
@@ -20,6 +21,9 @@
 
 
 function init() {
+  restart.addEventListener('click' , function(){
+    restartGame();
+  });
   cardsBuilder();
   cardListener();
   restartGame();
@@ -68,13 +72,12 @@ function addToOpenCards (card){
 }
 // Reset game and shuffle cards.
 function restartGame(){
-  restart.addEventListener('click' , function(){
+    $('#myModal').modal('hide');
     cardsBuilder();
-    cardListener();
     resetTimer();
     startTimer();
     starRatings();
-  });
+
 
 }
 // Match validation function
@@ -110,9 +113,6 @@ function equality (secondCard) {
 function winCondition(){
   if(pairs === 8){
     setTimeout(function(){
-      //textContent the star rating results in the document to the starsResult variable.
-      //textContent the timer in the document to the timeResult variable.
-      //add play again button that will restart the game on click.
       $("#myModal").modal();
       summary();
     },1500)
@@ -194,17 +194,12 @@ function summary(){
   $("#seconds").clone().appendTo("#summarySecs");
   $("#minutes").clone().appendTo("#summaryMin");
   $(".stars").clone().appendTo("#summaryStars");
+  playAgain.addEventListener('click' , function(){
+    restartGame();
+  });
 }
 
 init();
-
-
-
-
-
-
-
-
 
 
 
