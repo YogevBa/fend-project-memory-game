@@ -11,6 +11,12 @@
  let totalSeconds = 0;
  let timeCounter = setInterval(startTimer, 1000);
  let movesDisplay = document.querySelector('.moves');
+ let stars = document.querySelector('.stars');
+ let star1 = document.querySelector('.star1');
+ let star2 = document.querySelector('.star2');
+ let star3 = document.querySelector('.star3');
+ let summaryModal = $("#myModal");
+
 
 
 function init() {
@@ -34,6 +40,7 @@ function init() {
       if (cardsCounter === 2){
         moves += 1;
         movesDisplay.textContent = moves;
+        starRatings();
       }
     });
   };
@@ -65,6 +72,8 @@ function restartGame(){
     cardsBuilder();
     cardListener();
     resetTimer();
+    startTimer();
+    starRatings();
   });
 
 }
@@ -78,6 +87,8 @@ function equality (secondCard) {
       secondCard.classList.add('match');
       elem.classList.add('match');
       pairs += 1;
+      moves += 1;
+      movesDisplay.textContent = moves;
       cardsCounter = 0;
       winCondition();
     }
@@ -98,10 +109,13 @@ function equality (secondCard) {
 // Win Condition.
 function winCondition(){
   if(pairs === 8){
-    clearInterval(timeCounter)
     setTimeout(function(){
-      alert('Well Done');
-    },100)
+      //textContent the star rating results in the document to the starsResult variable.
+      //textContent the timer in the document to the timeResult variable.
+      //add play again button that will restart the game on click.
+      $("#myModal").modal();
+      summary();
+    },1500)
   }
 }
 // Shuffle function.
@@ -149,18 +163,38 @@ function cardsBuilder(){
   cardsCounter = 0;
   moves = 0;
   movesDisplay.textContent = 0;
+  star1.style.display = "inline";
+  star2.style.display = "inline";
+  star3.style.display = "inline";
   document.querySelector('.deck').innerHTML = ''; //clears the innerHTML elements of "deck".
   cardsArray.forEach(function(elem){
     if (elem.classList.contains('match') || elem.classList.contains('open') || elem.classList.contains('show')){
-      elem.classList.remove('open');
-      elem.classList.remove('show');
       elem.classList.remove('match');
+      removeCard(elem);
     }
     document.querySelector('.deck').appendChild(elem);
   });
   cardListener();
 }
+//Sets the condition for the star rating.
+function starRatings(){
+  // if no matches were found after 6 tries player looses 1 star
+  if (moves === 6){
+    star1.style.display = "none";
+  }
+  else if(moves === 12){
+    star2.style.display = "none";
+  }
+  else if (moves >= 18){
+    star3.style.display = "none";
+  }
+}
 
+function summary(){
+  $("#seconds").clone().appendTo("#summarySecs");
+  $("#minutes").clone().appendTo("#summaryMin");
+  $(".stars").clone().appendTo("#summaryStars");
+}
 
 init();
 
