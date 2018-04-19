@@ -6,7 +6,6 @@
  let firstCard;
  let pairs = 0;
  let moves = 0;
- let cardsCounter = 0;
  let minutesLabel = document.getElementById("minutes");
  let secondsLabel = document.getElementById("seconds");
  let totalSeconds = 0;
@@ -17,7 +16,9 @@
  let star2 = document.querySelector('.star2');
  let star3 = document.querySelector('.star3');
  let summaryModal = $("#myModal");
-
+ const playerStars = document.getElementById("summaryStars");
+ const playerSeconds = document.getElementById("summarySecs");
+ const playerMinutes = document.getElementById("summaryMin");
 
 
 function init() {
@@ -29,12 +30,14 @@ function init() {
   restartGame();
 }
 // Sets the card's click event and basic functionality of flipping cards.
- function cardListener(){
+function cardListener(){
    for (let i = 0; i<cards.length; i++){
     cards[i].addEventListener('click' , function(){
       cardsCounter += 1;
+      actions += 1;
       if (this.classList.contains('open')) {
         cardsCounter -= 1;
+        actions -= 1;
         return;
       }
       else if (cardsCounter <= 2){
@@ -73,6 +76,9 @@ function addToOpenCards (card){
 // Reset game and shuffle cards.
 function restartGame(){
     $('#myModal').modal('hide');
+    summarySecs.innerHTML = '';
+    summaryMin.innerHTML = '';
+    playerStars.innerHTML = '';
     cardsBuilder();
     resetTimer();
     startTimer();
@@ -115,7 +121,7 @@ function winCondition(){
     setTimeout(function(){
       $("#myModal").modal();
       summary();
-    },1500)
+    },1000)
   }
 }
 // Shuffle function.
@@ -134,10 +140,15 @@ function shuffle(array) {
 }
 // Starts the count up timer.
 function startTimer() {
-  ++totalSeconds;
-  secondsLabel.innerHTML = pad(totalSeconds % 60);
-  minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60));
-}
+  if (actions > 0){
+    ++totalSeconds;
+    secondsLabel.innerHTML = pad(totalSeconds % 60);
+    minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60));
+    }
+    else {
+      return;
+    }
+  }
 // Resets the timer.
 function resetTimer() {
   totalSeconds;
@@ -162,6 +173,7 @@ function cardsBuilder(){
   pairs = 0;
   cardsCounter = 0;
   moves = 0;
+  actions = 0;
   movesDisplay.textContent = 0;
   star1.style.display = "inline";
   star2.style.display = "inline";
@@ -191,6 +203,7 @@ function starRatings(){
 }
 
 function summary(){
+  actions = 0;
   $("#seconds").clone().appendTo("#summarySecs");
   $("#minutes").clone().appendTo("#summaryMin");
   $(".stars").clone().appendTo("#summaryStars");
